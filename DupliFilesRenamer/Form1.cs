@@ -158,7 +158,7 @@ namespace DulpliFilesRenamer
             }
             else
             {
-                Application.Exit();
+                this.Close();
             }
         }
 
