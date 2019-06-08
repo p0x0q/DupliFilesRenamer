@@ -17,6 +17,7 @@ namespace DulpliFilesRenamer
     {
         public static Hashtable config = new Hashtable();
         public static Hashtable def = new Hashtable();
+        public static bool autoplay = false;
         public Form1()
         {
             InitializeComponent();
@@ -35,6 +36,7 @@ namespace DulpliFilesRenamer
             DLL.main.appcheck(DLL.main.myappname());
             DLL.main.FormStart("DupliFilesRenamer", DLL.main.myappname());
             //DLL.form.Icon("Fuji", Properties.Resources.Icon, this);
+
 
             string json = nao0x0.JSON.Load();
             if (json != string.Empty)
@@ -57,6 +59,18 @@ namespace DulpliFilesRenamer
                     textBox1_date_format.Text = config["date_format"].ToString();
 
             }
+
+
+            string[] cmds = System.Environment.GetCommandLineArgs();
+            try
+            {
+                if (cmds[1] == "/autoplay")
+                {
+                    autoplay = true;
+                }
+
+            }
+            catch (Exception e) { }
         }
 
         public string set_replace_after_filename(string replace_after_filename,string date,string ext)
@@ -138,12 +152,27 @@ namespace DulpliFilesRenamer
 
             nao0x0.JSON.Save(nao0x0.JSON.ToJSON(setconfig));
 
-            MessageBox.Show(total_replace_files.ToString() + "個のファイルを置き換えました。");
+            if (autoplay == false)
+            {
+                MessageBox.Show(total_replace_files.ToString() + "個のファイルを置き換えました。");
+            }
+            else
+            {
+                Application.Exit();
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(textBox3_folderpath.Text);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            if(autoplay == true)
+            {
+                button1.PerformClick();
+            }
         }
     }
 }
