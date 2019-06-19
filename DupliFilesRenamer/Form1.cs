@@ -73,6 +73,34 @@ namespace DulpliFilesRenamer
             catch (Exception e) { }
         }
 
+        public void Save()
+        {
+            string folder_path = textBox3_folderpath.Text;
+            string replace_files = textBox2_replacefiles.Text;
+            string replace_after_filename = textBox4_replace_after_filename.Text;
+            string ext = textBox1_ext.Text;
+            string date_format = textBox1_date_format.Text;
+
+            string[] replaces_files = replace_files.Split('|');
+
+
+            Hashtable setconfig = new Hashtable();
+
+            setconfig["folder_path"] = folder_path;
+
+            setconfig["replace_files"] = replace_files;
+
+            if (replace_after_filename != (string)def["replace_after_filename"])
+                setconfig["replace_after_filename"] = replace_after_filename;
+
+            setconfig["ext"] = ext;
+
+            if (date_format != (string)def["date_format"])
+                setconfig["date_format"] = date_format;
+
+            nao0x0.JSON.Save(nao0x0.JSON.ToJSON(setconfig));
+        }
+
         public string set_replace_after_filename(string replace_after_filename,string date,string ext)
         {
             string result = replace_after_filename;
@@ -136,21 +164,7 @@ namespace DulpliFilesRenamer
 
             }
 
-            Hashtable setconfig = new Hashtable();
-
-            setconfig["folder_path"] = folder_path;
-
-            setconfig["replace_files"] = replace_files;
-
-            if(replace_after_filename != (string)def["replace_after_filename"])
-            setconfig["replace_after_filename"] = replace_after_filename;
-
-            setconfig["ext"] = ext;
-
-            if(date_format != (string)def["date_format"])
-            setconfig["date_format"] = date_format;
-
-            nao0x0.JSON.Save(nao0x0.JSON.ToJSON(setconfig));
+            Save();
 
             if (autoplay == false)
             {
@@ -173,6 +187,11 @@ namespace DulpliFilesRenamer
             {
                 button1.PerformClick();
             }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Save();
         }
     }
 }
